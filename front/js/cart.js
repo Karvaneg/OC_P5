@@ -43,7 +43,25 @@ function totalProductsPrice (){
 
 //----------------------------------Fonction Modifier la quantité d'un article du panier--------------------------------------------------
 
-
+function changeQuantity() {
+    let changeQuantity = document.querySelectorAll(".itemQuantity");
+    changeQuantity.forEach((item) => {
+        item.addEventListener("change", () => {
+            let basket = JSON.parse(localStorage.getItem("basket"));
+            for (let i in basket){
+                if (
+                    basket[i].id == item.dataset.id &&
+                    basket[i].color == item.dataset.color
+                ){
+                    (basket[i].quantity = parseInt(changeQuantity[i].value)),
+                        localStorage.setItem("basket", JSON.stringify(basket)),
+                        console.log(changeQuantity[i].value),
+                        (window.location.href = "cart.html");
+                }
+            }
+        });
+    });
+}
 
 
 
