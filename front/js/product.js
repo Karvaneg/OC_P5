@@ -68,21 +68,20 @@ fetch(`http://localhost:3000/api/products/${productId}`)
                 }
                 //-------------------------------Le Local Storage--------------------------------------------
                 //Fonction ajouter dans le localStorage un produit sélectionné par l'utilisatueur, avec ses options (id, couleur, quantité)
+                let localStorageUpdating = false;
                 const addProductLocalStorage = () => {
-                    let localStorageUpdating = false;
+                    
                     // Si le produit et la couleur choisis existent déjà dans le localStorage alors on incrémente uniquement la quantité
-                    let findProduct = produitEnregistreDansLocalStorage.find((x) => {return x.idProduct === optionsProduct.idProduct && x.colorProduct === optionsProduct.colorProduct})
-                    console.log(findProduct);
+                    let findProduct = produitEnregistreDansLocalStorage.find((x) => {return x.idProduct === optionsProduct.idProduct && x.colorProduct === optionsProduct.colorProduct});
                     if(findProduct){
                         const total = Number(findProduct.quantityProduct) + Number(optionsProduct.quantityProduct);
                         if(total <= 100){
                         localStorageUpdating = true;
                         findProduct.quantityProduct = Number(findProduct.quantityProduct) + Number(optionsProduct.quantityProduct);
-                        
                         }
                         else{
                             localStorageUpdating = false;
-                            alert("test");
+                            alert("La quantité d'un article (même référence et même couleur) ne peut pas dépasser 100. Merci de rectifier la quantité choisie.");
                         }
                     }
                     // Si le produit et la couleur choisis n'existent pas encore dans le localStorage alors on ajoute le produit et les options choisies
@@ -90,14 +89,16 @@ fetch(`http://localhost:3000/api/products/${productId}`)
                         localStorageUpdating = true;
                          // on met les options du produit choisi dans une variable "produitEnregistreDansLocalStorage"
                         produitEnregistreDansLocalStorage.push(optionsProduct);
-                        alert(`Le produit ${selectProduct.name} a bien été ajouté au panier.`);
+                      //  alert(`Le produit ${selectProduct.name} a bien été ajouté au panier.`);
                     }
                     if(localStorageUpdating){
-                    // Transformation en format JSON et envoi des infos dans la clé "produit" du localStorage
-                    localStorage.setItem("produit", JSON.stringify(produitEnregistreDansLocalStorage))
+                    
                     alert(`Le produit ${selectProduct.name} a bien été ajouté au panier.`);
                     }
-                }
+                    // Transformation en format JSON et envoi des infos dans la clé "produit" du localStorage
+                    localStorage.setItem("produit", JSON.stringify(produitEnregistreDansLocalStorage))
+                }// Fin fonction addProductLocalStorage
+
                 //Déclaration de la variable "produitEnregistreDansLocalStorage" dans laquelle on récupère les keys et les values....
                 //..... qui sont dans le localStorage afin de contrôler si le localStorage est vide ou non
                 let produitEnregistreDansLocalStorage = JSON.parse(localStorage.getItem("produit"));
@@ -111,8 +112,10 @@ fetch(`http://localhost:3000/api/products/${productId}`)
                 }
                 // si le localStorage est vide
                 else{
+                    
                     produitEnregistreDansLocalStorage = [];
                     addProductLocalStorage();
+                    localStorageUpdating = false;
                     console.log(produitEnregistreDansLocalStorage);
                     alert(`Le produit ${selectProduct.name} a bien été ajouté au panier qui n'est plus vide.`);
                 }

@@ -17,6 +17,7 @@ let priceProductPanier = 0;
 let totalProductPricePanier = 0;
 
 
+
 //_______________________________________________Fonctions__________________________________________________________________________________
 
 //--------------------------------Fonction Calcul de la quantité total d'articles dans le panier--------------------------------------------
@@ -38,31 +39,72 @@ function totalProductsPrice (){
     }
 
 //----------------------------------Fonction Suppression d'un article du panier--------------------------------------------------
+function deleteProduct() {
+    
+let selectSupprimer = document.querySelectorAll(".deleteItem");
+    for (let j = 0; j < selectSupprimer.length; j++){
+        
+        selectSupprimer[j].addEventListener("click" , () => {
+           // event.preventDefault();
 
+            //Selection de l'element à supprimer en fonction de son id ET sa couleur
+            let idDelete = productRegisterInLocalStorage[j].idProduct;
+            let colorDelete = productRegisterInLocalStorage[j].colorProduct;
+            console.log(idDelete);
+            console.log(colorDelete);
+        
+            productRegisterInLocalStorage = productRegisterInLocalStorage.filter( element => element.idProduct !== idDelete || element.colorProduct !== colorDelete );
+           
+            localStorage.setItem("produit", JSON.stringify(productRegisterInLocalStorage));
+            location.reload();
+            //Alerte produit supprimé et refresh
+            alert("Ce produit a bien été supprimé du panier");
+        })
+    }
+}
 
 
 //----------------------------------Fonction Modifier la quantité d'un article du panier--------------------------------------------------
-
+let messageErrorQuantity = false;
 function changeQuantity() {
     let changeQuantity = document.querySelectorAll(".itemQuantity");
     changeQuantity.forEach((item) => {
         item.addEventListener("change", () => {
-            let basket = JSON.parse(localStorage.getItem("basket"));
-            for (let i in basket){
-                if (
-                    basket[i].id == item.dataset.id &&
-                    basket[i].color == item.dataset.color
-                ){
-                    (basket[i].quantity = parseInt(changeQuantity[i].value)),
-                        localStorage.setItem("basket", JSON.stringify(basket)),
-                        console.log(changeQuantity[i].value),
-                        (window.location.href = "cart.html");
-                }
-            }
+                for (let i in productRegisterInLocalStorage){
+                    if (productRegisterInLocalStorage[i].id == item.dataset.id && productRegisterInLocalStorage[i].color == item.dataset.color){
+                        if(changeQuantity[i].value > 0 && changeQuantity[i].value <= 100){
+                        productRegisterInLocalStorage[i].quantityProduct = parseInt(changeQuantity[i].value);
+                        localStorage.setItem("produit", JSON.stringify(productRegisterInLocalStorage));
+                        window.location.href = "cart.html";
+                        messageErrorQuantity = false;
+                        }
+                        else if (changeQuantity[i].value = 0){
+                            messageErrorQuantity = false;
+                            deleteProduct();
+                        }
+                        else{
+                            changeQuantity[i].value = productRegisterInLocalStorage[i].quantityProduct;
+                            messageErrorQuantity = true;
+                        }
+                    } 
+                    if(messageErrorQuantity){       
+                        alert("La quantité d'un article (même référence et même couleur) doit être comprise entre 1 et 100. Merci de rectifier la quantité choisie.");
+                    } 
+                } 
+                
         });
+        
     });
+    
 }
 
+//----------------------------------Fonction pour afficher la phrase "Le panier est vide !"--------------------------------------------------
+function messagePanierVide() {
+    compositionProduitsPanier = 'Le panier est vide !';
+    let newH2 = document.createElement('h2');
+    productsPositionHtml.appendChild(newH2);
+    newH2.innerText = compositionProduitsPanier;
+}
 
 
 //--------------------------------------------Affichage des produits du LocalStorage---------------------------------------------------------
@@ -71,17 +113,16 @@ function changeQuantity() {
 const productsPositionHtml = document.getElementById("cart__items");
 
 
-//-------------------Si le panier est vide, on affiche "Le panier est vide"-------------------------------------------------------------------
-if(productRegisterInLocalStorage === null){
-    compositionProduitsPanier = 'Le panier est vide';
-    let newH2 = document.createElement('h2');
-    productsPositionHtml.appendChild(newH2);
-    newH2.innerText = compositionProduitsPanier;
-}
+
+//-----Si le panier est vide (le localStorage est vide ou le tableau qu'il contient est vide), on affiche "Le panier est vide"-------------------------------------------------------------------
+if(productRegisterInLocalStorage === null || productRegisterInLocalStorage.length == 0){
+    messagePanierVide(); 
+ }
+
 
 //-------------------Si le panier n'est pas vide alors, on affiche le contenu du localStorage------------------------------------------------
-else{
 
+ else {
     fetch("http://localhost:3000/api/products")
         .then(response => response.json())
         .then(data => {
@@ -90,14 +131,8 @@ else{
             let colorProductPanier = productRegisterInLocalStorage[i].colorProduct;
             let idProductPanier = productRegisterInLocalStorage[i].idProduct;
             quantityProductPanier = productRegisterInLocalStorage[i].quantityProduct;
-          /*  // La quantité max par produit étant de 100 articles, si cette quantité est supérieure à 100 dans le localStorage, on la ramène à 100...
-            if(quantityProductPanier > 100){
-                quantityProductPanier = 100;
-            }
-            else{
-            //.....sinon on la laisse tel quel
-            quantityProductPanier = quantityProductPanier;
-        }*/
+          
+          
         //on ne récupère que les données des canapés dont _id (de l'api) correspondent à l'id dans le localStorage
         const compositionProduitsPanier = data.find((element) => element._id === idProductPanier);
         console.log(compositionProduitsPanier);
@@ -113,9 +148,10 @@ else{
           // Récupération du prix de chaque produit que l'on met dans une variable priceProductPanier
           priceProductPanier = compositionProduitsPanier.price;*/
 
-          //--------------Appel des fonctions pour calculer la quantité totale d'articles et le prix total du panier-------------------------
-          totalProductsPrice(); 
-          totalProductsQuantity();
+//________________________Insertion dans le html de la quantité total d'articles et du prix total du panier________________________________
+//--------------Appel des fonctions pour calculer la quantité totale d'articles et le prix total du panier-------------------------
+totalProductsPrice(); 
+totalProductsQuantity();
 
 
 //--On cré les éléments html manquants de la page cart.html, dans la <section id="cart__items"> et on y insère les infos du localstorage----
@@ -202,29 +238,13 @@ productsPositionHtml.appendChild(newArticle);
                 
 //_________________________________________________Fin Ajout Balises html__________________________________________________________________
 
-//________________________Insertion dans le html de la quantité total d'articles et du prix total du panier________________________________
 
-
-
-
-//___________________________________________Modifier la quantité d'un produit______________________________________________________________
-
-const inputItemQuantity = document.querySelector('.itemQuantity');
-//const log = document.getElementById('log');
-
-inputItemQuantity.addEventListener('change', (updateValue)=>{
-updateValue.preventDefault();
-//console.log(inputItemQuantity);
-
-function updateValue(e) {
-    quantityProductPanier = e.target.value;
-}
-//console.log(quantityProductPanier);
-})
-
-
-//___________________________________________Supprimer un produit______________________________________________________________
-        
         }//for
-    })//then
-}//else
+
+//_____________________________________Appel de le fonction Modifier la quantité d'un produit____________________________________________________
+changeQuantity();
+
+//___________________________________________Appel de la fonction Supprimer un produit__________________________________________________________
+deleteProduct();
+       }); //then
+    }; //else
