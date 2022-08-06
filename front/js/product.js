@@ -67,8 +67,9 @@ fetch(`http://localhost:3000/api/products/${productId}`)
                     quantityProduct: choiceQuantity
                 }
                 //-------------------------------Le Local Storage--------------------------------------------
+                // On cré une variable pour afficher un message lors de l'ajout d'1 produit dans le localStorage
+                let messageLocalStorageUpdating = false;
                 //Fonction ajouter dans le localStorage un produit sélectionné par l'utilisatueur, avec ses options (id, couleur, quantité)
-                let localStorageUpdating = false;
                 const addProductLocalStorage = () => {
                     
                     // Si le produit et la couleur choisis existent déjà dans le localStorage alors on incrémente uniquement la quantité
@@ -76,25 +77,25 @@ fetch(`http://localhost:3000/api/products/${productId}`)
                     if(findProduct){
                         const total = Number(findProduct.quantityProduct) + Number(optionsProduct.quantityProduct);
                         if(total <= 100){
-                        localStorageUpdating = true;
-                        findProduct.quantityProduct = Number(findProduct.quantityProduct) + Number(optionsProduct.quantityProduct);
+                            // On met la variable message sur false pour pouvoir afficher un message plus approprié
+                            messageLocalStorageUpdating = false;
+                            findProduct.quantityProduct = Number(findProduct.quantityProduct) + Number(optionsProduct.quantityProduct);
+                            alert(`La quantité du produit ${selectProduct.name} de couleur ${choiceColor} a bien été mise à jour.`);
                         }
                         else{
-                            localStorageUpdating = false;
+                            // On met la variable message sur false pour pouvoir afficher un message plus approprié
+                            messageLocalStorageUpdating = false;
                             alert("La quantité d'un article (même référence et même couleur) ne peut pas dépasser 100. Merci de rectifier la quantité choisie.");
                         }
                     }
                     // Si le produit et la couleur choisis n'existent pas encore dans le localStorage alors on ajoute le produit et les options choisies
                     else{
-                        localStorageUpdating = true;
+                        // On met la variable message sur true car c'est bien ce message là qu'on veut afficher
+                        messageLocalStorageUpdating = true;
                          // on met les options du produit choisi dans une variable "produitEnregistreDansLocalStorage"
                         produitEnregistreDansLocalStorage.push(optionsProduct);
-                      //  alert(`Le produit ${selectProduct.name} a bien été ajouté au panier.`);
                     }
-                    if(localStorageUpdating){
                     
-                    alert(`Le produit ${selectProduct.name} a bien été ajouté au panier.`);
-                    }
                     // Transformation en format JSON et envoi des infos dans la clé "produit" du localStorage
                     localStorage.setItem("produit", JSON.stringify(produitEnregistreDansLocalStorage))
                 }// Fin fonction addProductLocalStorage
@@ -107,18 +108,21 @@ fetch(`http://localhost:3000/api/products/${productId}`)
                  // si le localStorage contient déjà une clé "produit"
                 if(produitEnregistreDansLocalStorage){
                     addProductLocalStorage();
-                  //  alert(`Le produit ${selectProduct.name} a bien été ajouté au panier.`);
                     console.log(produitEnregistreDansLocalStorage);
                 }
                 // si le localStorage est vide
                 else{
-                    
                     produitEnregistreDansLocalStorage = [];
                     addProductLocalStorage();
-                    localStorageUpdating = false;
                     console.log(produitEnregistreDansLocalStorage);
-                    alert(`Le produit ${selectProduct.name} a bien été ajouté au panier qui n'est plus vide.`);
+                    // On met la variable message sur false pour pouvoir afficher un message plus approprié
+                    messageLocalStorageUpdating = false;
+                    alert(`Félicitations !! Vous venez d'ajouter votre premier produit dans le panier ! `);
                 }
+                // si la variable messageLocalStorageUpdating est vrai alors on affiche ce message :
+                if(messageLocalStorageUpdating){
+                    alert(`Le produit ${selectProduct.name} de couleur ${choiceColor} a bien été ajouté au panier.`);
+                    }
 
             }
             // si la couleur n'est pas sélectionnée ou la quantité non comprise entre 1 et 100 alors on affiche un message d'alerte
