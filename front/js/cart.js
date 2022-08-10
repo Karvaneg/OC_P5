@@ -16,10 +16,13 @@ let compositionProduitsPanier = [];
 let totalPrice = 0;  
 let totalQuantity = 0;
 let newTotalQuantity = 0;
+let newTotalPrice = 0;
 let quantityProductPanier = 0;
 let priceProductPanier = 0;
 let totalProductPricePanier = 0;
 let errorFormulaire = true;
+let idDelete = 0;
+let colorDelete = 0;
 const boutonCommander = document.getElementById("order");
 const validFirstName = [];
 const validLastName = [];
@@ -57,6 +60,7 @@ function totaux (){
 //----------------------------------Fonction Modifier la quantité d'un article du panier--------------------------------------------------
 let messageErrorQuantity = false;
 function changeQuantity() {
+    // On sélectionne l'élément html (input) dans lequel la quantité est modifiée
     let changeQuantity = document.querySelectorAll(".itemQuantity");
     changeQuantity.forEach((item) => {
         item.addEventListener("change", (event) => {
@@ -80,7 +84,7 @@ function changeQuantity() {
                             messageErrorQuantity = false;
                             //Alerte produit supprimé et refresh
                             alert("Ce produit a bien été supprimé du panier");
-                          //  totaux();
+                            window.location.href = "cart.html";
                             
                         }
                         else{
@@ -101,33 +105,6 @@ function changeQuantity() {
 
 //----------------------------------Fonction Suppression d'un article du panier--------------------------------------------------
 
-/*function deleteProduct() {
-    let selectSupprimer = document.querySelectorAll(".deleteItem");
-    for (let j = 0; j < selectSupprimer.length; j++){
-        selectSupprimer[j].addEventListener("click" , (event) => {
-           event.preventDefault();
-           // On pointe le parent hiérarchique <article> du lien "supprimer"
-           let myArticle = selectSupprimer[j].closest('article');
-
-           // Sélection de l'élément à supprimer en fonction de son id ET sa couleur
-           // Préparation à la suppression du localStorage-miroir (nettoyage du panier)
-           productRegisterInLocalStorage = productRegisterInLocalStorage.filter(
-            el => myArticle.dataset.id !== el.idProduct &&
-                  myArticle.dataset.color !== el.colorProduct
-           );
-            // Reconstruction du localStorage (écrasement)
-            localStorage.setItem('produit', JSON.stringify(productRegisterInLocalStorage));
-
-            // Supprimer physiquement le bloc-produit du panier
-            // On supprime cette balise <article> depuis son parent
-            myArticle.parentNode.removeChild(myArticle);
-            setTimeout( () => {totaux() }, 500);
-            setTimeout( () => { alert("Ce produit a bien été supprimé du panier")}, 800);
-            console.log(totaux());
-        })
-        }
-}*/
-
 function deleteProduct() {
     
     let selectSupprimer = document.querySelectorAll(".deleteItem");
@@ -145,10 +122,18 @@ function deleteProduct() {
                 localStorage.setItem("produit", JSON.stringify(productRegisterInLocalStorage));
                 //Alerte produit supprimé
                 alert("Ce produit va être supprimé du panier");
-
-
-
-                fetch("http://localhost:3000/api/products")
+                 // On pointe le parent hiérarchique <article> du lien "supprimer"
+                 let myArticle = selectSupprimer[j].closest('article');
+                 console.log(myArticle);
+                 // Supprimer physiquement le bloc-produit du panier
+                 // On supprime cette balise <article> depuis son parent
+                 myArticle.parentNode.removeChild(myArticle);
+                 location.reload();
+            }); 
+        }     
+}
+            /*  // Essai (infructueux) de la fonction supprimer sans réactualisation de la page -- problèmes pour le recalcul de la quantité et du prix total
+             fetch("http://localhost:3000/api/products")
                 .then(response => response.json())
                 .then(data => {
                 // on récupère la couleur, la quantité et l'id de tous les produits contenus dans le localstorage et on les met dans des variables
@@ -157,6 +142,15 @@ function deleteProduct() {
                     let idProductPanier = productRegisterInLocalStorage[k].idProduct;
                     quantityProductPanier = productRegisterInLocalStorage[k].quantityProduct;
                     console.log(quantityProductPanier);
+                    totalQuantity = parseInt(quantityProductPanier);
+                    console.log(totalQuantity);
+                    document.getElementById("totalQuantity").innerText = totalQuantity;
+                    // On pointe le parent hiérarchique <article> du lien "supprimer"
+                 let myArticle = selectSupprimer[j].closest('article');
+                 console.log(myArticle);
+                 // Supprimer physiquement le bloc-produit du panier
+                 // On supprime cette balise <article> depuis son parent
+                 myArticle.parentNode.removeChild(myArticle);
                   
                 //on ne récupère que les données des canapés dont _id (de l'api) correspondent à l'id dans le localStorage
                 const newcompositionProduitsPanier = data.find((element) => element._id === idProductPanier);
@@ -165,83 +159,15 @@ function deleteProduct() {
                 priceProductPanier = newcompositionProduitsPanier.price;
 
                 newTotalProductPricePanier = quantityProductPanier * priceProductPanier;
-                console.log(totalProductPricePanier);
+                
+                newTotalPrice += newTotalProductPricePanier;
+                console.log(newTotalPrice);
+                const elementTotal = document.getElementById('totalPrice');
+                elementTotal.textContent = newTotalPrice;
              //   totaux();
 
                 }
-                });
-
-               
-                // On pointe le parent hiérarchique <article> du lien "supprimer"
-                let myArticle = selectSupprimer[j].closest('article');
-                console.log(myArticle);
-                // Supprimer physiquement le bloc-produit du panier
-                // On supprime cette balise <article> depuis son parent
-                myArticle.parentNode.removeChild(myArticle);
-              //  setTimeout( () => {totaux() }, 500);
-              //  setTimeout( () => { alert("Ce produit a bien été supprimé du panier")}, 800);
-             //   console.log(totaux());
-
-
-               
-                    
-                
-                                
-                 /*   // Calcul du prix total de chaque produit en multipliant la quantité par le prix unitaire
-                    totalProductPricePanier = quantityProductPanier * priceProductPanier;
-                    console.log(totalProductPricePanier);
-                    // Calcul du prix total du panier
-                    totalPrice -= totalProductPricePanier;
-                    console.log(totalPrice);
-                    document.getElementById("totalPrice").innerText = totalPrice; */
-                    
-
-
-
-            });
-        }
-            /*    // Et on réaffiche le "nouveau" contenu du localStorage
-                productRegisterInLocalStorage = JSON.parse(localStorage.getItem("produit"));
-                console.log(productRegisterInLocalStorage);
-               
-                fetch("http://localhost:3000/api/products")
-                .then(response => response.json())
-                .then(data => {
-                // on récupère la couleur, la quantité et l'id de tous les produits contenus dans le localstorage et on les met dans des variables
-                for(let i = 0; i < productRegisterInLocalStorage.length; i++){
-                    let colorProductPanier = productRegisterInLocalStorage[i].colorProduct;
-                    let idProductPanier = productRegisterInLocalStorage[i].idProduct;
-                    console.log(idProductPanier);
-                    console.log(colorProductPanier);
-                    quantityProductPanier = productRegisterInLocalStorage[i].quantityProduct;
-                    console.log(quantityProductPanier);
-                    //on ne récupère que les données des canapés dont _id (de l'api) correspondent à l'id dans le localStorage
-                    const compositionProduitsPanier = data.find((element) => element._id === idProductPanier);
-                    console.log(compositionProduitsPanier);
-                    // Récupération du prix de chaque produit que l'on met dans une variable priceProductPanier
-                    priceProductPanier = compositionProduitsPanier.price;
-                    console.log(priceProductPanier);
-                    const elementH2 = document.getElementsByTagName('h2');
-                    elementH2.textContent = compositionProduitsPanier.name;
-                    console.log(elementH2.textContent);
-
-
-
-                }
-               
                 });*/
-               
-               
-                // affichagePanier();
-             //   const elementH2 = document.getElementsByTagName('h2');
-              //  elementH2.textContent = productRegisterInLocalStorage[j].name;
-
-                // Et on recalcule la quantité et le prix total du panier
-              //  totalProductsQuantity();
-               // totaux();
-               
-
-        }
    // const elementTotal = document.getElementById('totalPrice');
   //  elementTotal.textContent = "test";
 
@@ -254,6 +180,7 @@ function messagePanierVide() {
     let newH2 = document.createElement('h2');
     productsPositionHtml.appendChild(newH2);
     newH2.innerText = compositionProduitsPanier;
+    // On insère 0 dans le html pour la quantité et le prix du panier
     document.getElementById("totalQuantity").innerText = 0;
     document.getElementById("totalPrice").innerText = 0;
 }
@@ -294,7 +221,8 @@ if(productRegisterInLocalStorage === null || productRegisterInLocalStorage.lengt
         // Récupération du prix de chaque produit que l'on met dans une variable priceProductPanier
         priceProductPanier = compositionProduitsPanier.price;
         
- /*   fetch(`http://localhost:3000/api/products/${(productRegisterInLocalStorage[i]._id)}`)
+ /*  // Essai infructeux pour essayer de ne récupérer que les infos des produits du localStorage
+  fetch(`http://localhost:3000/api/products/${productRegisterInLocalStorage[i]._id}`)
         .then(response => response.json())
         .then(data => {
           //on ne récupère que les données des canapés dont _id (de l'api) correspondent à l'id dans le localStorage
@@ -393,22 +321,15 @@ productsPositionHtml.appendChild(newArticle);
                 newDivContentSettingsDelete.appendChild(newPDelete);
                 
 //_________________________________________________Fin Ajout Balises html__________________________________________________________________
- totaux();
+  
+    //________________________Appel de la fonction pour calculer la quantité totale de produits et le prix total du panier__________________
+    totaux();
 
         }//for
-
-
-
-        
    //___________________________________________Appel de la fonction Supprimer un produit__________________________________________________________
    deleteProduct();
    //_____________________________________Appel de le fonction Modifier la quantité d'un produit____________________________________________________
    changeQuantity(); 
-   
-  // totaux();
-   
-
-
 
 }); //then   
 

@@ -6,7 +6,7 @@
 console.log(urlId);
 const productId = urlId.get("id");*/
 
-// Récupération de la chaîne de requête dans l'URL et Extraction de l'ID de l'URL
+// Récupération de la chaîne de requête dans l'URL du navigateur et Extraction de l'ID de l'URL
 const productId = new URLSearchParams(window.location.search).get("id");
 console.log(productId);
 
@@ -18,13 +18,13 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     console.log(selectProduct);
 
 //Affichage sur la page product.html du canapé sélectionné sur la page d'accueil, à partir de l'id de l'URL
+    // Ajout du nom du produit dans la balise title du navigateur
+    document.title = selectProduct.name;
     // Création d'une balise img manquante
     const img = document.createElement("img");
     // Récupération des données de l'API et destination des éléments
     img.src = selectProduct.imageUrl;
     img.alt = selectProduct.altTxt;
-    // Ajout du nom du produit dans la balise title du navigateur
-    document.title = selectProduct.name;
     document.getElementsByClassName("item__img")[0].appendChild(img);
     document.getElementById("title").innerText = selectProduct.name;
     document.getElementById("price").innerText = selectProduct.price + " ";
