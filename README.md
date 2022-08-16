@@ -37,29 +37,41 @@ Enfin, dans le code HTML j’ai intégré des “id” dans différentes balises
 
 #### Page Accueil
 
-● 
+● Cette page affiche (de manière dynamique) tous les articles disponibles à
+la vente. L’ensemble des produits sont retournés par l’API. 
 
-● 
+● Pour chaque produit, il faudra afficher l’image de celui-ci, ainsi que son nom et le début de
+sa description.
 
-● 
+● En cliquant sur le produit, l’utilisateur sera redirigé sur la page du produit pour consulter
+celui-ci plus en détail.
 
 #### Page Produit
 
-● 
+● Cette page affiche (de manière dynamique) les détails du produit sur
+lequel l'utilisateur a cliqué depuis la page d’accueil.
+
+● Depuis cette page, l’utilisateur
+peut sélectionner une quantité, une couleur, et ajouter le produit à son panier.
 
 #### Page Panier
 
-● 
+● Un résumé des produits dans le panier, le prix total et la possibilité de modifier la quantité d’un produit sélectionné ou bien de supprimer celui-ci.
 
-● 
+● Dans le panier, les produits doivent toujours apparaître de manière regroupée par modèle et par couleur. Si un produit est ajouté dans le panier à plusieurs reprises, avec la même couleur, celui-ci ne doit apparaître qu’une seule fois, mais avec le nombre d’exemplaires ajusté.
+Si un produit est ajouté dans le panier à plusieurs reprises, mais avec des couleurs différentes, il doit apparaître en deux lignes distinctes avec la couleur et la quantité correspondantes indiquées à chaque fois.
+
+● Un formulaire permettant de passer une commande. Les données du formulaire doivent être correctes et bien formatées avant d'être renvoyées au back-end. Par exemple, pas de chiffre dans un champ prénom.
+
+● En cas de problème de saisie, un message d’erreur devra être affiché en dessous du champ correspondant.
+
+● Attention à ne pas stocker le prix des articles en local. Les données stockées en local ne sont pas sécurisées et l’utilisateur pourrait alors modifier le prix lui-même.
 
 #### Page Confirmation
 
-● 
+● Un message de confirmation de commande, remerciant l'utilisateur pour sa commande, et indiquant l'identifiant de commande envoyé par l’API.
 
-● 
-
-● 
+● Sur cette page, l'utilisateur doit voir s’afficher son numéro de commande. Il faudra veiller à ce que ce numéro ne soit stocké nulle part.
 
 
 ## Compétences évaluées
@@ -123,9 +135,12 @@ ____
 
 ## Ressources utilisées
 
-* 
+* [RegExr](https://regexr.com/) - Testeur d'expressions régulières (Regex) avec coloration syntaxique
 * [Visual Studio Code](https://code.visualstudio.com/) - Editeur de codes
 
+## Lien du site
+
+* [Kanap By Karvaneg](https://karvaneg.github.io/OC_P5/front/html/index.html) - Nécessité d'exécuter le serveur avec `node server`
 
 ## Auteurs
 
