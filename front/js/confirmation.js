@@ -15,6 +15,12 @@ if(localStorage.getItem("produit") === null){
         console.log(idCommande); 
     }
     //----------------------------On appelle la fonction pour afficher le numéro de commande------------------------------------------------
+    /**
+     * Récupère le numéro de commande dans l'URL et l'affiche dans le html
+     * @param { String } URLSearchParams
+     * @param { String } orderId
+     * @param { String } idCommande
+    */
     displayOrderId();
     //-----------------------------------------On vide le localStorage--------------------------------------------------------------------
     localStorage.clear();

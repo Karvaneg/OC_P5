@@ -336,9 +336,6 @@ productsPositionHtml.appendChild(newArticle);
 //__________________________________________Gestion du formulaire de contact et validation de la commande________________________________________
 //___________________________________Contrôle des infos avec Regex et Récupération des données du formulaire_______________________
 
-    // Sélection de l'élément form et déclaration d'une variable
-  //  let form = document.querySelector(".cart__order__form");
-
     //Création des expressions régulières pour contrôler les infos entrées par l'utilisateur
     let textRegex = new RegExp("^[^.?!:;,/\\/_-]([. '-]?[a-zA-Zàâäéèêëïîôöùûüç])+[^.?!:;,/\\/_-]$");
     let addressRegex = new RegExp("^[^.?!:;,/\\/_-]([, .:;'-]?[0-9a-zA-Zàâäéèêëïîôöùûüç])+[^.?!:;,/\\/_-]$");
@@ -390,7 +387,7 @@ productsPositionHtml.appendChild(newArticle);
             addressErrorMsg.innerHTML = '';
             errorFormulaire = false;
         } else {
-            addressErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
+            addressErrorMsg.innerHTML = 'Veuillez indiquer une adresse.';
             errorFormulaire = true;
         }
     });
@@ -474,12 +471,11 @@ productsPositionHtml.appendChild(newArticle);
             body: JSON.stringify(order)
         };
         console.log(options);
-        // on envoie les données Contact et l'id des produits à l'API et on efface le localStorage
+        // on envoie les données Contact et l'id des produits à l'API
         fetch("http://localhost:3000/api/products/order", options)
         .then((response) => response.json())
         .then((data) => {
             console.log(data);
-          //  localStorage.clear();
             // on redirige vers la page de confirmation de commande en passant l'orderId (numéro de commande) dans l'URL
             document.location.href = `confirmation.html?orderId=${data.orderId}`;
         })

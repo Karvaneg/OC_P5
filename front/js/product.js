@@ -127,12 +127,17 @@ fetch(`http://localhost:3000/api/products/${productId}`)
             }
             // si la couleur n'est pas sélectionnée ou la quantité non comprise entre 1 et 100 alors on affiche un message d'alerte
             else {
-                alert(`La couleur n'est pas sélectionnée ou la quantité n'est pas comprise entre 1 et 100`);
+                alert(`La couleur n'est pas sélectionnée et/ou la quantité n'est pas comprise entre 1 et 100`);
             }
         });
     })
-    .catch(err => console.log("Erreur Fetch product.js", err))
+    .catch(err => {
+        console.log("Erreur Fetch product.js", err)
+        alert(`L'id du produit n'a pas été trouvé !`);
+        window.location.href = "index.html";
+    })
 }
-else{
-    alert(`l'id du produit n'a pas été trouvé !`);
- }
+/*else{
+    alert(`L'id du produit n'a pas été trouvé !`);
+    window.location.href = "index.html";
+ }*/
