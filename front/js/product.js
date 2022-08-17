@@ -131,13 +131,14 @@ fetch(`http://localhost:3000/api/products/${productId}`)
             }
         });
     })
-    .catch(err => {
-        console.log("Erreur Fetch product.js", err)
-        alert(`L'id du produit n'a pas été trouvé !`);
+    .catch((err) => {
+        console.log("Erreur Fetch product.js : l'id du produit est incorrect.", err);
+        alert(`Le produit sélectionné n'a pas été trouvé !`);
         window.location.href = "index.html";
     })
 }
-/*else{
-    alert(`L'id du produit n'a pas été trouvé !`);
+else{
+    console.log("L'id du produit n'a pas été indiqué dans l'url.");
+    alert(`Le produit sélectionné n'a pas été trouvé !`);
     window.location.href = "index.html";
- }*/
+ }

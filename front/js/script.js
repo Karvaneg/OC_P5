@@ -31,6 +31,6 @@ fetch("http://localhost:3000/api/products")
     }
    })
    .catch(err => {
-    alert(`Les produits n'ont pas pu être affichés. Pensez à lancer le serveur local !`);
+    alert(`Une erreur s'est produite et ne permet pas d'afficher les produits de notre catalogue. Veuillez nous en excuser !`);
     console.log("Erreur Fetch script.js", err);
    })

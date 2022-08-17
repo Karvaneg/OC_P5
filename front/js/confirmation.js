@@ -1,27 +1,16 @@
-//_______________________________Si le localStorage est vide alors on redirige sur la page d'accueil du site_____________________________________
-if(localStorage.getItem("produit") === null){
+//_________________Récupération de la chaîne de requête dans l'URL et Extraction de l'orderId (numéro de commande) de l'URL_______________________
+const urlOrderId = new URLSearchParams(window.location.search).get("orderId");
+
+//_______________________________S'il n'y a pas d'orderId dans l'URL alors on redirige sur la page d'accueil du site_____________________________________
+if(urlOrderId === null || urlOrderId === ""){
+    alert ("Une erreur s'est produite lors de la validation de votre commande. Veuillez nous en excuser !");
     window.location.href = "index.html";
  }
+//______________________________Sinon, on affiche la confirmation de la commande et le numéro de commande________________________________________
  else{
-    //_______________________________________Fonction pour afficher le numéro de commande_______________________________________________________
-    function displayOrderId(){
-        // Récupération de la chaîne de requête dans l'URL et Extraction de l'orderId (numéro de commande) de l'URL
-        const orderId = new URLSearchParams(window.location.search).get("orderId");
-        console.log(orderId);
-        // Sélection de l'élément html dans lequel on veut afficher le numéro de commande
-        const idCommande = document.getElementById("orderId");
-        // On insère le numéro de commande dans le html
-        idCommande.innerText = orderId;
-        console.log(idCommande); 
-    }
-    //----------------------------On appelle la fonction pour afficher le numéro de commande------------------------------------------------
-    /**
-     * Récupère le numéro de commande dans l'URL et l'affiche dans le html
-     * @param { String } URLSearchParams
-     * @param { String } orderId
-     * @param { String } idCommande
-    */
-    displayOrderId();
-    //-----------------------------------------On vide le localStorage--------------------------------------------------------------------
-    localStorage.clear();
+    // Sélection de l'élément html dans lequel on veut afficher le numéro de commande
+    const idCommande = document.getElementById("orderId");
+    // On insère le numéro de commande dans le html
+    idCommande.innerText = urlOrderId;
+    console.log(idCommande);
 }
