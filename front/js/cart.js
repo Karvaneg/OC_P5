@@ -26,7 +26,11 @@ let colorDelete = 0;
 
 //--------------------------------------On déclare nos variables utilisées pour la validation du panier--------------------------------------------
 const boutonCommander = document.getElementById("order");
-let errorFormulaire = true;
+let errorFormulaireFirstName = true;
+let errorFormulaireLastName = true;
+let errorFormulaireAddress = true;
+let errorFormulaireCity = true;
+let errorFormulaireEmail = true;
 
 //_____________________________________________________________Fonctions_____________________________________________________________________
 
@@ -172,6 +176,95 @@ function messagePanierVide() {
 //__________________________________________________Affichage des produits du LocalStorage__________________________________________________________
 
 
+//___________________________________Contrôle des infos avec Regex et Récupération des données du formulaire____________________________________
+    
+        //Création des expressions régulières pour contrôler les infos entrées par l'utilisateur
+        let textRegex = new RegExp("^[^.?!:;,/\\/_-]([. '-]?[a-zA-Zàâäéèêëïîôöùûüç])+[^.?!:;,/\\/_-]$");
+        let addressRegex = new RegExp("^[^.?!:;,/\\/_-]([, .:;'-]?[0-9a-zA-Zàâäéèêëïîôöùûüç])+[^.?!:;,/\\/_-]$");
+        let emailRegex = new RegExp("^[^. ?!:;,/\\/_-]([._-]?[a-z0-9])+[^.?!: ;,/\\/_-][@][a-z0-9]+[.][a-z][a-z]+$");
+
+        //Récupération des coordonnées du formulaire client et mise en variable
+        let inputFirstName = document.getElementById('firstName');
+        let inputLastName = document.getElementById('lastName');
+        let inputAddress = document.getElementById('address');
+        let inputCity = document.getElementById('city');
+        let inputEmail = document.getElementById('email');
+        //Déclaration des variables pour vérifier la bonne valeur des champs du formulaire
+        let checkValueFirstName;
+        let checkValueLastName;
+        let checkValueAddress;
+        let checkValueCity;
+        let checkValueEmail;
+  
+        // Ecoute du contenu du champ "prénom", Vérification du prénom et affichage d'un message si celui-ci n'est pas correct
+        inputFirstName.addEventListener('change', function() {
+            let firstNameErrorMsg = inputFirstName.nextElementSibling;
+            checkValueFirstName = textRegex.test(inputFirstName.value);
+            if (checkValueFirstName) {
+                firstNameErrorMsg.innerHTML = '';
+                errorFormulaireFirstName = false;
+            } 
+            else {
+                firstNameErrorMsg.innerHTML = 'Veuillez indiquer un prénom.';
+                errorFormulaireFirstName = true;
+            }
+        });
+
+        // Ecoute du contenu du champ "nom", Vérification du nom et affichage d'un message si celui-ci n'est pas correct
+        inputLastName.addEventListener('change', function() {
+            let lastNameErrorMsg = inputLastName.nextElementSibling;
+            checkValueLastName = textRegex.test(inputLastName.value);
+            if (checkValueLastName) {
+                lastNameErrorMsg.innerHTML = '';
+                errorFormulaireLastName = false;
+            }
+            else {
+                lastNameErrorMsg.innerHTML = 'Veuillez indiquer un nom de famille.';
+                errorFormulaireLastName = true;
+            }
+        });
+
+        // Ecoute du contenu du champ "adresse", Vérification de l'adresse et affichage d'un message si celle-ci n'est pas correcte
+        inputAddress.addEventListener('change', function() {
+            let addressErrorMsg = inputAddress.nextElementSibling;
+            checkValueAddress = addressRegex.test(inputAddress.value);
+            if (checkValueAddress) {
+                addressErrorMsg.innerHTML = '';
+                errorFormulaireAddress = false;
+            }
+            else {
+                addressErrorMsg.innerHTML = 'Veuillez indiquer une adresse.';
+                errorFormulaireAddress = true;
+            }
+        });
+
+        // Ecoute du contenu du champ "ville", Vérification de la ville et affichage d'un message si celle-ci n'est pas correcte
+        inputCity.addEventListener('change', function() {
+            let cityErrorMsg = inputCity.nextElementSibling;
+            checkValueCity = textRegex.test(inputCity.value);
+            if (checkValueCity) {
+                cityErrorMsg.innerHTML = '';
+                errorFormulaireCity = false;
+            } else {
+                cityErrorMsg.innerHTML = 'Veuillez indiquer le nom d\'une ville.';
+                errorFormulaireCity = true;
+            }
+        });
+
+        // Ecoute du contenu du champ "email", Vérification de l'email et affichage d'un message si celui-ci n'est pas correct
+        inputEmail.addEventListener('change', function() {
+            let emailErrorMsg = inputEmail.nextElementSibling;
+            checkValueEmail = emailRegex.test(inputEmail.value);
+            if (checkValueEmail) {
+                emailErrorMsg.innerHTML = '';
+                errorFormulaireEmail = false;
+            }
+            else {
+                emailErrorMsg.innerHTML = 'Veuillez renseigner un email correct.';
+                errorFormulaireEmail = true;
+            }
+        });
+
 
 //--------------Si le panier est vide (le localStorage est vide ou le tableau qu'il contient est vide), on affiche "Le panier est vide"------------
 if(productRegisterInLocalStorage === null || productRegisterInLocalStorage.length == 0){
@@ -301,95 +394,8 @@ else {
     //Ecoute du bouton Commander 
     boutonCommander.addEventListener("click", (event)=>{
         event.preventDefault();// Empêche le rechargement de la page
+
         //__________________________________________Gestion du formulaire de contact et validation de la commande________________________________________
-        //___________________________________Contrôle des infos avec Regex et Récupération des données du formulaire____________________________________
-    
-        //Création des expressions régulières pour contrôler les infos entrées par l'utilisateur
-        let textRegex = new RegExp("^[^.?!:;,/\\/_-]([. '-]?[a-zA-Zàâäéèêëïîôöùûüç])+[^.?!:;,/\\/_-]$");
-        let addressRegex = new RegExp("^[^.?!:;,/\\/_-]([, .:;'-]?[0-9a-zA-Zàâäéèêëïîôöùûüç])+[^.?!:;,/\\/_-]$");
-        let emailRegex = new RegExp("^[^. ?!:;,/\\/_-]([._-]?[a-z0-9])+[^.?!: ;,/\\/_-][@][a-z0-9]+[.][a-z][a-z]+$");
-
-        //Récupération des coordonnées du formulaire client et mise en variable
-        let inputFirstName = document.getElementById('firstName');
-        let inputLastName = document.getElementById('lastName');
-        let inputAddress = document.getElementById('address');
-        let inputCity = document.getElementById('city');
-        let inputEmail = document.getElementById('email');
-        //Déclaration des variables pour vérifier la bonne valeur des champs du formulaire
-        let checkValueFirstName;
-        let checkValueLastName;
-        let checkValueAddress;
-        let checkValueCity;
-        let checkValueEmail;
-  
-        // Ecoute du contenu du champ "prénom", Vérification du prénom et affichage d'un message si celui-ci n'est pas correct
-        inputFirstName.addEventListener('change', function() {
-            let firstNameErrorMsg = inputFirstName.nextElementSibling;
-            checkValueFirstName = textRegex.test(inputFirstName.value);
-            if (checkValueFirstName) {
-                firstNameErrorMsg.innerHTML = '';
-                errorFormulaire = false;
-            } 
-            else {
-                firstNameErrorMsg.innerHTML = 'Veuillez indiquer un prénom.';
-                errorFormulaire = true;
-            }
-        });
-
-        // Ecoute du contenu du champ "nom", Vérification du nom et affichage d'un message si celui-ci n'est pas correct
-        inputLastName.addEventListener('change', function() {
-            let lastNameErrorMsg = inputLastName.nextElementSibling;
-            checkValueLastName = textRegex.test(inputLastName.value);
-            if (checkValueLastName) {
-                lastNameErrorMsg.innerHTML = '';
-                errorFormulaire = false;
-            }
-            else {
-                lastNameErrorMsg.innerHTML = 'Veuillez indiquer un nom de famille.';
-                errorFormulaire = true;
-            }
-        });
-
-        // Ecoute du contenu du champ "adresse", Vérification de l'adresse et affichage d'un message si celle-ci n'est pas correcte
-        inputAddress.addEventListener('change', function() {
-            let addressErrorMsg = inputAddress.nextElementSibling;
-            checkValueAddress = addressRegex.test(inputAddress.value);
-            if (checkValueAddress) {
-                addressErrorMsg.innerHTML = '';
-                errorFormulaire = false;
-            }
-            else {
-                addressErrorMsg.innerHTML = 'Veuillez indiquer une adresse.';
-                errorFormulaire = true;
-            }
-        });
-
-        // Ecoute du contenu du champ "ville", Vérification de la ville et affichage d'un message si celle-ci n'est pas correcte
-        inputCity.addEventListener('change', function() {
-            let cityErrorMsg = inputCity.nextElementSibling;
-            checkValueCity = textRegex.test(inputCity.value);
-            if (checkValueCity) {
-                cityErrorMsg.innerHTML = '';
-                errorFormulaire = false;
-            } else {
-                cityErrorMsg.innerHTML = 'Veuillez indiquer le nom d\'une ville.';
-                errorFormulaire = true;
-            }
-        });
-
-        // Ecoute du contenu du champ "email", Vérification de l'email et affichage d'un message si celui-ci n'est pas correct
-        inputEmail.addEventListener('change', function() {
-            let emailErrorMsg = inputEmail.nextElementSibling;
-            checkValueEmail = emailRegex.test(inputEmail.value);
-            if (checkValueEmail) {
-                emailErrorMsg.innerHTML = '';
-                errorFormulaire = false;
-            }
-            else {
-                emailErrorMsg.innerHTML = 'Veuillez renseigner un email correct.';
-                errorFormulaire = true;
-            }
-        });
         
         // On vérifie que tous les champs sont bien renseignés, sinon on indique un message à l'utilisateur
         // On vérifie qu'aucun champ n'est vide
@@ -397,8 +403,9 @@ else {
             alert("Vous devez renseigner tous les champs !");
             event.preventDefault();
         }
-        // On vérifie que les champs sont correctements remplis suivant les regex mises en place
-        else if(errorFormulaire !== false){
+        // On vérifie que les champs sont correctement remplis suivant les regex mises en place
+        else if(errorFormulaireFirstName === true || errorFormulaireLastName === true || errorFormulaireAddress === true
+             ||errorFormulaireCity === true || errorFormulaireEmail === true){
             alert("Veuillez vérifier les champs du formulaire et les remplir correctement !");
             event.preventDefault();
         }
