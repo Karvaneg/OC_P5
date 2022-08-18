@@ -103,7 +103,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
                 //Déclaration de la variable "produitEnregistreDansLocalStorage" dans laquelle on récupère les keys et les values....
                 //..... qui sont dans le localStorage afin de contrôler si le localStorage est vide ou non
                 let produitEnregistreDansLocalStorage = JSON.parse(localStorage.getItem("produit"));
-                //----JSON.parse c'est pour convertir les données au format JSON qui sont dans le local storage en objet javascript
+                //----JSON.parse c'est pour convertir les données au format JSON qui sont dans le localStorage en objet javascript
 
                  // si le localStorage contient déjà une clé "produit"
                 if(produitEnregistreDansLocalStorage){
