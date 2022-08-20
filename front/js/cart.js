@@ -282,7 +282,6 @@ if(productRegisterInLocalStorage === null || productRegisterInLocalStorage.lengt
     });
 }
 
-
 //-----------------------------------Si le panier n'est pas vide alors, on affiche le contenu du localStorage-------------------------------------
 
 else {
@@ -399,7 +398,12 @@ else {
 
     //Ecoute du bouton Commander 
     boutonCommander.addEventListener("click", (event)=>{
-        event.preventDefault();// Empêche le rechargement de la page
+      event.preventDefault();// Empêche le rechargement de la page
+      if(productRegisterInLocalStorage === null || productRegisterInLocalStorage.length === 0){ 
+            alert("Votre panier est vide !");
+      }
+      else{
+        
 
         //__________________________________________Gestion du formulaire de contact et validation de la commande________________________________________
         
@@ -459,5 +463,6 @@ else {
             //----------------------------------------------On vide le localStorage---------------------------------------------------------------
             localStorage.clear();
         }; //fin else
+      }
     }); //fin écoute bouton Commander
 }; //fin else
