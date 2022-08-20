@@ -56,16 +56,20 @@ fetch(`http://localhost:3000/api/products/${productId}`)
             choiceColor = colorId.value;
             // Sélection de l'id pour le choix de la quantité et insertion de la quantité choisie par l'utilisateur dans une variable
             const quantity = document.querySelector("#quantity");
-            choiceQuantity = quantity.value;
+            choiceQuantity = Number(quantity.value);
+            console.log(choiceQuantity);
 
            // Récupération des données (id, couleur et quantité) après les choix faits par l'utilisateur,....
-           //..... à condition que la couleur soit bien sélectionnée et que la quantité indiquée par l'utilisateur soit comprise entre 1 et 100
-            if (choiceColor !== "" && choiceQuantity > 0 && choiceQuantity <= 100) {
+           //..... à condition que la couleur soit bien sélectionnée,.... 
+           //......que la quantité indiquée par l'utilisateur soit comprise entre 1 et 100.....
+           //......et que la quantité entrée par l'utilisateur soit un nombre entier
+            if (choiceColor !== "" && choiceQuantity > 0 && choiceQuantity <= 100 && Number.isInteger(choiceQuantity)) {
                 let optionsProduct = {
                     idProduct: selectProduct._id ,
                     colorProduct: choiceColor ,
                     quantityProduct: choiceQuantity
                 }
+                console.log(optionsProduct);
                 //-------------------------------Le Local Storage--------------------------------------------
                 // On cré une variable pour afficher un message lors de l'ajout d'1 produit dans le localStorage
                 let messageLocalStorageUpdating = false;
@@ -127,7 +131,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
             }
             // si la couleur n'est pas sélectionnée ou la quantité non comprise entre 1 et 100 alors on affiche un message d'alerte
             else {
-                alert(`La couleur n'est pas sélectionnée et/ou la quantité n'est pas comprise entre 1 et 100`);
+                alert(`La couleur n'est pas sélectionnée et/ou la quantité n'est pas comprise entre 1 et 100 ou n'est pas un nombre entier. Veuillez vérifier !`);
             }
         });
     })

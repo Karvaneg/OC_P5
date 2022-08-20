@@ -8,7 +8,6 @@ let productRegisterInLocalStorage = JSON.parse(localStorage.getItem("produit"));
 //--------------------Sélection de la balise de la page product.html dans laquel on va insérer les produits et leurs infos-------------------------
 const productsPositionHtml = document.getElementById("cart__items");
 
-
 //_______________________________________________Déclaration des variables________________________________________________________________________
 let compositionProduitsPanier = [];
 //-----------On déclare nos variables globales pour pouvoir calculer la quantité total d'articles et le prix total du panier----------------------
@@ -37,7 +36,7 @@ let errorFormulaireEmail = true;
 //----------------------Fonction Calcul de la quantité total d'articles dans le panier, au chargement de la page Panier.html-----------------
 function totalProductsQuantity(){
     totalQuantity += parseInt(quantityProductPanier);
-    console.log(totalQuantity);
+    console.log("Total quantité panier",totalQuantity);
     document.getElementById("totalQuantity").innerText = totalQuantity;
 }
 
@@ -45,10 +44,10 @@ function totalProductsQuantity(){
 function totalProductsPrice (){
     // Calcul du prix total de chaque produit en multipliant la quantité par le prix unitaire
     totalProductPricePanier = quantityProductPanier * priceProductPanier;
-    console.log(totalProductPricePanier);
+    // console.log(totalProductPricePanier);
     // Calcul du prix total du panier
     totalPrice += totalProductPricePanier;
-    console.log(totalPrice);
+    console.log("Total prix panier",totalPrice);
     document.getElementById("totalPrice").innerText = totalPrice; 
     }
 
@@ -64,7 +63,7 @@ function recalculTotalQuantity() {
         //On calcul le nombre de quantité total de produits dans le localStorage
         newTotalQuantity += parseInt(item.quantityProduct);
     }
-        console.log(newTotalQuantity);
+        console.log("Nouvelle quantité totale panier",newTotalQuantity);
     //On affichage la nouvelle quantité totale de produits dans le html
     document.getElementById("totalQuantity").innerText = newTotalQuantity;
 }
@@ -84,7 +83,7 @@ function recalculTotalPrice() {
         if (findProducts) {
             const newTotalProductPricePanier = findProducts.price * quantityProductsLocalStorage;
             newTotalPrice += newTotalProductPricePanier;
-                //console.log(newTotalPrice);
+                console.log("Nouveau prix total panier",newTotalPrice);
         }
     //On affichage le nouveau prix total du panier dans le html
     document.getElementById("totalPrice").innerText = newTotalPrice;
@@ -102,9 +101,15 @@ function changeQuantity() {
             event.preventDefault();
                 for (let i in productRegisterInLocalStorage){
                     if (productRegisterInLocalStorage[i].id == item.dataset.id && productRegisterInLocalStorage[i].color == item.dataset.color){
-                        // Si la quantité est comprise entre 1 et 100, on met à jour la quantité dans le localStorage et le DOM
-                        if(changeQuantity[i].value > 0 && changeQuantity[i].value <= 100){
-                        productRegisterInLocalStorage[i].quantityProduct = parseInt(changeQuantity[i].value);
+                        // Si la quantité est comprise entre 1 et 100 et que c'est un nombre entier,...
+                        //...on met à jour la quantité dans le localStorage et le DOM
+                        choiceQuantity = Number(changeQuantity[i].value);
+                        console.log("Ma quantité",choiceQuantity);
+                      
+                        if(changeQuantity[i].value > 0 && changeQuantity[i].value <= 100 && Number.isInteger(choiceQuantity)){
+                        parseChangeQuantity = parseInt(changeQuantity[i].value);
+                        console.log("Parse change Quantity",parseChangeQuantity);
+                        productRegisterInLocalStorage[i].quantityProduct = parseChangeQuantity;
                         localStorage.setItem("produit", JSON.stringify(productRegisterInLocalStorage));
                         // Et, on recalcule la quantité et le prix total du panier
                         recalculTotalQuantity();
@@ -118,7 +123,7 @@ function changeQuantity() {
                         }
                     } 
                     if(messageErrorQuantity){       
-                        alert("La quantité d'un article (même référence et même couleur) doit être comprise entre 1 et 100. Merci de rectifier la quantité choisie.");
+                        alert("La quantité d'un article (même référence et même couleur) doit être comprise entre 1 et 100 et être un nombre entier. Merci de rectifier la quantité choisie.");
                     } 
                 } 
         });
@@ -127,30 +132,33 @@ function changeQuantity() {
 
 //----------------------------------Fonction Suppression d'un article du panier--------------------------------------------------
 function deleteProduct() {
-    
     let selectSupprimer = document.querySelectorAll(".deleteItem");
-        for (let j = 0; j < selectSupprimer.length; j++){
-            selectSupprimer[j].addEventListener("click" , (event) => {
+    selectSupprimer.forEach((selectSupprimer) => {
+            selectSupprimer.addEventListener("click" , (event) => {
                 event.preventDefault();
-                //Selection de l'element à supprimer en fonction de son id ET sa couleur
-                let idDelete = productRegisterInLocalStorage[j].idProduct;
-                let colorDelete = productRegisterInLocalStorage[j].colorProduct;
-                console.log(idDelete);
-                console.log(colorDelete);
+                            
+                // On pointe le parent hiérarchique <article> du lien "supprimer"
+                let myArticle = selectSupprimer.closest('article');
+                console.log(myArticle);
+                // on filtre les éléments du localStorage pour ne garder que ceux qui sont différents de l'élément qu'on supprime
                 productRegisterInLocalStorage = productRegisterInLocalStorage.filter
-                ( element => element.idProduct !== idDelete || element.colorProduct !== colorDelete );
+                ( element => element.idProduct !== myArticle.dataset.id || element.colorProduct !== myArticle.dataset.color );
+                
+                // On met à jour le localStorage
                 localStorage.setItem("produit", JSON.stringify(productRegisterInLocalStorage));
+                
                 //Alerte produit supprimé
                 alert("Ce produit va être supprimé du panier.");
-                 // On pointe le parent hiérarchique <article> du lien "supprimer"
-                 let myArticle = selectSupprimer[j].closest('article');
-                 console.log(myArticle);
-                 // Supprimer physiquement le bloc-produit du panier
-                 // On supprime cette balise <article> depuis son parent
-                 myArticle.parentNode.removeChild(myArticle);
-                 //-----Si, du coup, le panier est vide (le localStorage est vide ou le tableau qu'il contient est vide), on affiche "Le panier est vide"-------------------------------------------------------------------
-                if(productRegisterInLocalStorage === null || productRegisterInLocalStorage.length == 0){
-                messagePanierVide();
+                 
+                
+                // On supprime physiquement la balise <article> du produit que l'on supprime depuis son parent, si elle existe
+                if (myArticle.parentNode) {
+                    myArticle.parentNode.removeChild(myArticle);
+                }
+                //-----Si, du coup, le panier est vide (le localStorage est vide ou le tableau qu'il contient est vide),...
+                //...on affiche "Le panier est vide"-------------------------------------------------------------------
+                if(productRegisterInLocalStorage === null || productRegisterInLocalStorage.length === 0){
+                    messagePanierVide();
                 }
                 else{
                 // Et, on recalcule la quantité et le prix total du panier
@@ -158,7 +166,7 @@ function deleteProduct() {
                 recalculTotalPrice();
                 }
             }); 
-        }     
+    })
 }
 
 //----------------------------------Fonction pour afficher la phrase "Le panier est vide !"--------------------------------------------------
@@ -171,9 +179,6 @@ function messagePanierVide() {
     document.getElementById("totalQuantity").innerText = 0;
     document.getElementById("totalPrice").innerText = 0;
 }
-
-
-//__________________________________________________Affichage des produits du LocalStorage__________________________________________________________
 
 
 //___________________________________Contrôle des infos avec Regex et Récupération des données du formulaire____________________________________
@@ -265,9 +270,10 @@ function messagePanierVide() {
             }
         });
 
+//__________________________________________________Affichage des produits du LocalStorage__________________________________________________________
 
 //--------------Si le panier est vide (le localStorage est vide ou le tableau qu'il contient est vide), on affiche "Le panier est vide"------------
-if(productRegisterInLocalStorage === null || productRegisterInLocalStorage.length == 0){
+if(productRegisterInLocalStorage === null || productRegisterInLocalStorage.length === 0){
     messagePanierVide(); 
     //Si le client clique quand même sur le bouton commander, on lui rappelle que le panier est vide
     boutonCommander.addEventListener("click", (event)=>{
@@ -412,8 +418,8 @@ else {
         else{
             //Récupération des id des produits du panier, dans le localStorage
             let idProducts = [];
-            for (let i = 0; i<productRegisterInLocalStorage.length;i++) {
-                idProducts.push(productRegisterInLocalStorage[i].idProduct);
+            for (let l = 0; l<productRegisterInLocalStorage.length;l++) {
+                idProducts.push(productRegisterInLocalStorage[l].idProduct);
             }
                 //console.log(idProducts);
             // On cré un objet dans lequel on met les infos "Contact" et les infos "Produits du panier" (l'id)
