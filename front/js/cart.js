@@ -62,9 +62,9 @@ function recalculTotalQuantity() {
     let newTotalQuantity = 0;
     for (const item of productRegisterInLocalStorage) {
         //On calcul le nombre de quantité total de produits dans le localStorage
-        newTotalQuantity += item.quantityProduct;
+        newTotalQuantity += parseInt(item.quantityProduct);
     }
-        //console.log(newTotalQuantity);
+        console.log(newTotalQuantity);
     //On affichage la nouvelle quantité totale de produits dans le html
     document.getElementById("totalQuantity").innerText = newTotalQuantity;
 }
@@ -427,7 +427,7 @@ else {
                 },
                 products: idProducts,
             } 
-                //console.log(order);
+               //console.log(order);
             // On indique la méthode d'envoi des données
             const options = {
                 method: 'POST',
