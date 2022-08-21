@@ -100,12 +100,10 @@ function changeQuantity() {
         item.addEventListener("change", (event) => {
             event.preventDefault();
                 for (let i in productRegisterInLocalStorage){
-                    if (productRegisterInLocalStorage[i].id == item.dataset.id && productRegisterInLocalStorage[i].color == item.dataset.color){
-                        // Si la quantité est comprise entre 1 et 100 et que c'est un nombre entier,...
-                        //...on met à jour la quantité dans le localStorage et le DOM
                         choiceQuantity = Number(changeQuantity[i].value);
                         console.log("Ma quantité",choiceQuantity);
-                      
+                        // Si la quantité est comprise entre 1 et 100 et que c'est un nombre entier,...
+                        //...on met à jour la quantité dans le localStorage et le DOM
                         if(changeQuantity[i].value > 0 && changeQuantity[i].value <= 100 && Number.isInteger(choiceQuantity)){
                         parseChangeQuantity = parseInt(changeQuantity[i].value);
                         console.log("Parse change Quantity",parseChangeQuantity);
@@ -121,7 +119,6 @@ function changeQuantity() {
                         changeQuantity[i].value = productRegisterInLocalStorage[i].quantityProduct;
                         messageErrorQuantity = true;
                         }
-                    } 
                     if(messageErrorQuantity){       
                         alert("La quantité d'un article (même référence et même couleur) doit être comprise entre 1 et 100 et être un nombre entier. Merci de rectifier la quantité choisie.");
                     } 
