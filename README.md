@@ -107,26 +107,26 @@ ___Évaluation___ : Dimanche 21 août 2022
 
 3. Créer un plan de test pour une application
 
-  __-> Validé__
+  __-> Validé.__
 
 
 
 4. Gérer des événements JavaScript
 
-  __-> Validé__
+  __-> Validé.__
 
 
 ### Livrables
 
 ___Points forts___ : code bien structuré et bonne logique d'application.
 
-___Axes d'amélioration___ : utiliser les backtick pour écrire du HTML sous forme de chaine de caractère.
+___Axes d'amélioration___ : utiliser les backtick pour écrire du HTML sous forme de chaine de caractères.
 
 
 
 ### Soutenance
 
-__Remarques : Très mauvaise connexion internet, la soutenance n'a pas pu se dérouler dans les meilleurs conditions, néanmoins la présentation et les réponses aux questions étaient convenables.__
+__Remarques : Très mauvaise connexion internet, la soutenance n'a pas pu se dérouler dans les meilleures conditions, néanmoins la présentation et les réponses aux questions étaient convenables.__
 
 ____
 
