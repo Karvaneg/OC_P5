@@ -21,12 +21,12 @@ fetch("http://localhost:3000/api/products")
 
       let newH3 = document.createElement('h3');
       newH3.setAttribute("class","productName");
-      newH3.textContent = listProducts.name;
+      newH3.innerText = listProducts.name;
       newArticle.appendChild(newH3);
       
       let newP = document.createElement('p');
       newP.setAttribute("class","productDescription");
-      newP.textContent = listProducts.description;
+      newP.innerText = listProducts.description;
       newArticle.appendChild(newP);
     }
    })

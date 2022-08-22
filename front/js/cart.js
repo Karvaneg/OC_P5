@@ -96,33 +96,36 @@ function changeQuantity() {
     // On sélectionne l'élément html (input) dans lequel la quantité est modifiée
     let changeQuantity = document.querySelectorAll(".itemQuantity");
     changeQuantity.forEach((item) => {
-        //On écoute le changement sur itemQuantity
+        //On écoute le changement sur l'input "itemQuantity"
         item.addEventListener("change", (event) => {
             event.preventDefault();
-                for (let i in productRegisterInLocalStorage){
-                        choiceQuantity = Number(changeQuantity[i].value);
-                        console.log("Ma quantité",choiceQuantity);
-                        // Si la quantité est comprise entre 1 et 100 et que c'est un nombre entier,...
-                        //...on met à jour la quantité dans le localStorage et le DOM
-                        if(changeQuantity[i].value > 0 && changeQuantity[i].value <= 100 && Number.isInteger(choiceQuantity)){
-                        parseChangeQuantity = parseInt(changeQuantity[i].value);
-                        console.log("Parse change Quantity",parseChangeQuantity);
-                        productRegisterInLocalStorage[i].quantityProduct = parseChangeQuantity;
-                        localStorage.setItem("produit", JSON.stringify(productRegisterInLocalStorage));
-                        // Et, on recalcule la quantité et le prix total du panier
-                        recalculTotalQuantity();
-                        recalculTotalPrice();
-                        messageErrorQuantity = false;
-                        }
-                        // Sinon, on remet dans le DOM la quantité indiquée dans le localStorage et on indique un message d'erreur
-                        else{
-                        changeQuantity[i].value = productRegisterInLocalStorage[i].quantityProduct;
-                        messageErrorQuantity = true;
-                        }
-                    if(messageErrorQuantity){       
-                        alert("La quantité d'un article (même référence et même couleur) doit être comprise entre 1 et 100 et être un nombre entier. Merci de rectifier la quantité choisie.");
-                    } 
-                } 
+            choiceQuantity = Number(item.value);
+            // On pointe le parent hiérarchique <article> de l'input "itemQuantity"
+            let myArticle = item.closest('article');
+                //console.log(myArticle);
+            // On récupère dans le localStorage l'élément (même id et même couleur) dont on veut modifier la quantité
+            let selectMyArticleInLocalStorage = productRegisterInLocalStorage.find
+            ( element => element.idProduct === myArticle.dataset.id && element.colorProduct === myArticle.dataset.color );
+            
+            // Si la quantité est comprise entre 1 et 100 et que c'est un nombre entier,...
+            //...on met à jour la quantité dans le localStorage et le DOM
+            if(choiceQuantity > 0 && choiceQuantity <= 100 && Number.isInteger(choiceQuantity)){
+                parseChoiceQuantity = parseInt(choiceQuantity);
+                selectMyArticleInLocalStorage.quantityProduct = parseChoiceQuantity;
+                localStorage.setItem("produit", JSON.stringify(productRegisterInLocalStorage));
+                // Et, on recalcule la quantité et le prix total du panier
+                recalculTotalQuantity();
+                recalculTotalPrice();
+                messageErrorQuantity = false;
+            }
+            // Sinon, on remet dans le DOM la quantité indiquée dans le localStorage et on indique un message d'erreur
+            else{
+                item.value = selectMyArticleInLocalStorage.quantityProduct;
+                messageErrorQuantity = true;
+            }
+            if(messageErrorQuantity){       
+                alert("La quantité d'un article (même référence et même couleur) doit être comprise entre 1 et 100 et être un nombre entier. Merci de rectifier la quantité choisie.");
+            } 
         });
     });
 }
@@ -203,11 +206,11 @@ function messagePanierVide() {
             let firstNameErrorMsg = inputFirstName.nextElementSibling;
             checkValueFirstName = textRegex.test(inputFirstName.value);
             if (checkValueFirstName) {
-                firstNameErrorMsg.innerHTML = '';
+                firstNameErrorMsg.innerText = '';
                 errorFormulaireFirstName = false;
             } 
             else {
-                firstNameErrorMsg.innerHTML = 'Veuillez indiquer un prénom.';
+                firstNameErrorMsg.innerText = 'Veuillez indiquer un prénom.';
                 errorFormulaireFirstName = true;
             }
         });
@@ -217,11 +220,11 @@ function messagePanierVide() {
             let lastNameErrorMsg = inputLastName.nextElementSibling;
             checkValueLastName = textRegex.test(inputLastName.value);
             if (checkValueLastName) {
-                lastNameErrorMsg.innerHTML = '';
+                lastNameErrorMsg.innerText = '';
                 errorFormulaireLastName = false;
             }
             else {
-                lastNameErrorMsg.innerHTML = 'Veuillez indiquer un nom de famille.';
+                lastNameErrorMsg.innerText = 'Veuillez indiquer un nom de famille.';
                 errorFormulaireLastName = true;
             }
         });
@@ -231,11 +234,11 @@ function messagePanierVide() {
             let addressErrorMsg = inputAddress.nextElementSibling;
             checkValueAddress = addressRegex.test(inputAddress.value);
             if (checkValueAddress) {
-                addressErrorMsg.innerHTML = '';
+                addressErrorMsg.innerText = '';
                 errorFormulaireAddress = false;
             }
             else {
-                addressErrorMsg.innerHTML = 'Veuillez indiquer une adresse.';
+                addressErrorMsg.innerText = 'Veuillez indiquer une adresse.';
                 errorFormulaireAddress = true;
             }
         });
@@ -245,10 +248,10 @@ function messagePanierVide() {
             let cityErrorMsg = inputCity.nextElementSibling;
             checkValueCity = textRegex.test(inputCity.value);
             if (checkValueCity) {
-                cityErrorMsg.innerHTML = '';
+                cityErrorMsg.innerText = '';
                 errorFormulaireCity = false;
             } else {
-                cityErrorMsg.innerHTML = 'Veuillez indiquer le nom d\'une ville.';
+                cityErrorMsg.innerText = 'Veuillez indiquer le nom d\'une ville.';
                 errorFormulaireCity = true;
             }
         });
@@ -258,11 +261,11 @@ function messagePanierVide() {
             let emailErrorMsg = inputEmail.nextElementSibling;
             checkValueEmail = emailRegex.test(inputEmail.value);
             if (checkValueEmail) {
-                emailErrorMsg.innerHTML = '';
+                emailErrorMsg.innerText = '';
                 errorFormulaireEmail = false;
             }
             else {
-                emailErrorMsg.innerHTML = 'Veuillez renseigner un email correct.';
+                emailErrorMsg.innerText = 'Veuillez renseigner un email correct.';
                 errorFormulaireEmail = true;
             }
         });
@@ -332,17 +335,17 @@ else {
 
                             //-------------------Création d'une balise titre h2 qui indique le nom du produit choisi par l'utilisateur--------------
                             let newH2 = document.createElement('h2');
-                            newH2.textContent = compositionProduitsPanier.name;
+                            newH2.innerText = compositionProduitsPanier.name;
                             newDivContentDescription.appendChild(newH2);
 
                             //--------------------Création d'une balise p qui indique la couleur choisie par l'utilisateur------------------------
                             let newPColor = document.createElement('p');
-                            newPColor.textContent = colorProductPanier;
+                            newPColor.innerText = colorProductPanier;
                             newDivContentDescription.appendChild(newPColor);
 
                             //--------------------------Création d'une balise p qui indique le prix du canapé-------------------------------------
                             let newPPrice = document.createElement('p');
-                            newPPrice.textContent = compositionProduitsPanier.price + " €";
+                            newPPrice.innerText = compositionProduitsPanier.price + " €";
                             newDivContentDescription.appendChild(newPPrice);
 
                         //------------------------Création de la div avec pour classe cart__item__content__settings------------------------------
@@ -357,7 +360,7 @@ else {
 
                                 //-----------------------------Création d'une balise p qui indique le texte "Qté :"-------------------------------
                                 let newPQuantite = document.createElement('p');
-                                newPQuantite.textContent = "Qté :";
+                                newPQuantite.innerText = "Qté :";
                                 newDivContentSettingsQuantity.appendChild(newPQuantite);
 
                                 //------------Création d'une balise input avec la classe "itemQuantity" qui permet de modifier la quantité-------
@@ -378,7 +381,7 @@ else {
                                 //------------------------Création d'une balise p qui indique le prix du canapé-----------------------------------
                                 let newPDelete = document.createElement('p');
                                 newPDelete.setAttribute("class", "deleteItem");
-                                newPDelete.textContent = "Supprimer";
+                                newPDelete.innerText = "Supprimer";
                                 newDivContentSettingsDelete.appendChild(newPDelete);
                 
                 //_____________________________________________Fin Ajout Balises html____________________________________________________________

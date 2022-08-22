@@ -88,48 +88,45 @@ Si un produit est ajouté dans le panier à plusieurs reprises, mais avec des co
 ## Evaluation
 
 ___Évaluation___ : Dimanche 21 août 2022
-#### -> `Projet `
+#### -> `Projet Validé`
 
 
 ### Remarques sur l'évaluation
 
-1. 
+1. Interagir avec un web service avec JavaScript
 
- __-> __
-
-
-
-2. 
-
- __-> __
+ __-> Validé.__
 
 
 
-3. 
+2. Valider des données issues de sources externes
 
-  __-> __
-
-
-
-4. 
-
-  __-> __
+ __-> Validé.__
 
 
 
-5. 
+3. Créer un plan de test pour une application
 
-  __-> __
+  __-> Validé__
+
+
+
+4. Gérer des événements JavaScript
+
+  __-> Validé__
 
 
 ### Livrables
 
-___Points forts___ : ____ 
+___Points forts___ : code bien structuré et bonne logique d'application.
+
+___Axes d'amélioration___ : utiliser les backtick pour écrire du HTML sous forme de chaine de caractère.
+
 
 
 ### Soutenance
 
-
+__Remarques : Très mauvaise connexion internet, la soutenance n'a pas pu se dérouler dans les meilleurs conditions, néanmoins la présentation et les réponses aux questions étaient convenables.__
 
 ____
 
